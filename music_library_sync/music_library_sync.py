@@ -143,8 +143,12 @@ class MusicLibrarySync:
 
                 try:
                     self._sync_tags_of_file(converted_path)
-                except:
-                    pass
+                except Exception as e:
+                    logger.error(
+                        f'Failed to updated tags of "%s": %s',
+                        converted_path,
+                        str(e),
+                    )
 
     def remove_unknown(self) -> None:
         """Remove files that aren't present in the source directory."""
