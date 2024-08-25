@@ -32,6 +32,9 @@ def convert():
     music_library_sync.remove_wrong_formats()
     music_library_sync.remove_unknown()
     music_library_sync.sync_tags()
+    # If you already have a bunch of mp3 files alongside your lossless files, you can
+    # copy them over. Or you can convert them as well by not copying them.
+    # music_library_sync.copy_missing(match_target_file_extension=True)
     music_library_sync.convert_missing()
 
 
@@ -42,9 +45,7 @@ def copy_to(destination):
     )
     music_library_sync.remove_unknown()
     music_library_sync.sync_tags()
-    music_library_sync.copy_missing(
-        match_target_file_extension=False,
-    )
+    music_library_sync.copy_missing(match_target_file_extension=False)
 
 
 if __name__ == "__main__":
