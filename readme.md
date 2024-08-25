@@ -24,7 +24,7 @@ Example setup:
 from music_library_sync.music_library_sync import MusicLibrarySync
 
 
-def sync_small():
+def convert():
     music_library_sync = MusicLibrarySync(
         source="/mnt/data/music",
         destination="/mnt/data/music-small",
@@ -35,10 +35,10 @@ def sync_small():
     music_library_sync.convert_missing()
 
 
-def sync_sdcard():
+def copy_to(destination):
     music_library_sync = MusicLibrarySync(
         source="/mnt/data/music-small",
-        destination="/media/sdcard/",
+        destination=destination,
     )
     music_library_sync.remove_unknown()
     music_library_sync.sync_tags()
@@ -48,17 +48,18 @@ def sync_sdcard():
 
 
 if __name__ == "__main__":
-    # Various setups
-
     # First convert it to another directory, making sure everything is of the correct
     # format.
-    sync_small()
+    convert()
 
     # Then copy it to various other media to avoid redundant conversions, this time
     # not putting any restrictions on the format. Just copy whatever the other steps
     # prepared.
-    sync_sdcard()
-    ...
+    copy_to("/media/sdcard_1/")
+    copy_to("/media/sdcard_2/")
+    copy_to("/media/sdcard_3/")
+
+    # Next time this script is run, only new files will be converted and copied.
 ```
 
 Constructor parameters for the `MusicLibrarySync` class can be used to control the
