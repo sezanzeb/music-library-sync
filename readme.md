@@ -35,22 +35,29 @@ def sync_small():
     music_library_sync.convert_missing()
 
 
-def sync_sd():
+def sync_sdcard():
     music_library_sync = MusicLibrarySync(
         source="/mnt/data/music-small",
         destination="/media/sdcard/",
     )
-    music_library_sync.remove_wrong_formats()
     music_library_sync.remove_unknown()
     music_library_sync.sync_tags()
-    music_library_sync.copy_missing()
+    music_library_sync.copy_missing(
+        match_target_file_extension=False,
+    )
 
 
 if __name__ == "__main__":
-    # various setups. First convert it to another directory, and from that directory
-    # copy it to various other media to avoid redundant conversions.
+    # Various setups
+
+    # First convert it to another directory, making sure everything is of the correct
+    # format.
     sync_small()
-    sync_sd()
+
+    # Then copy it to various other media to avoid redundant conversions, this time
+    # not putting any restrictions on the format. Just copy whatever the other steps
+    # prepared.
+    sync_sdcard()
     ...
 ```
 

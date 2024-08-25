@@ -21,7 +21,7 @@ class MusicLibrarySync:
         source: str,
         destination: str,
         soundconverter_format_options: str = "--format mp3 --mode cbr --quality 160",
-        file_extension: str = "mp3",
+        target_file_extension: str = "mp3",
         interactive_delete: bool = True,
     ) -> None:
         """file_extension and soundconverter_format_options have to match!"""
@@ -35,11 +35,11 @@ class MusicLibrarySync:
         # 128 kbps mp3 is already transparent for many people, I'd go with 160, just to
         # be on the safe side.
         self.soundconverter_format_options = soundconverter_format_options
-        if file_extension.startswith("."):
-            file_extension = file_extension[1:]
-        file_extension = file_extension.lower()
-        assert file_extension in soundconverter_format_options
-        self.file_extension = file_extension.lower()
+        if target_file_extension.startswith("."):
+            target_file_extension = target_file_extension[1:]
+        target_file_extension = target_file_extension.lower()
+        assert target_file_extension in soundconverter_format_options
+        self.target_file_extension = target_file_extension.lower()
 
     def convert_missing(self) -> None:
         """Convert missing files from the source to the destination."""
@@ -59,7 +59,7 @@ class MusicLibrarySync:
         logger.info("running %s", command)
         os.system(command)
 
-    def copy_missing(self) -> None:
+    def copy_missing(self, match_target_file_extension: bool = True) -> None:
         """Copy new files from the source to the destination, if they are already of
         the correct file extension.
 
@@ -75,10 +75,10 @@ class MusicLibrarySync:
                 if not self._should_handle(input_path):
                     continue
 
-                if self.file_extension is not None:
+                if self.target_file_extension and match_target_file_extension:
                     extension = os.path.splitext(input_path)[1][1:]
-                    if extension.lower() != self.file_extension.lower():
-                        # only copy files that match self.file_extension
+                    if extension.lower() != self.target_file_extension.lower():
+                        # only copy files that match self.target_file_extension
                         continue
 
                 output_path = os.path.join(
@@ -105,13 +105,13 @@ class MusicLibrarySync:
                 if not self._should_handle(path):
                     continue
 
-                if not path.lower().endswith(f".{self.file_extension.lower()}"):
+                if not path.lower().endswith(f".{self.target_file_extension.lower()}"):
                     files_to_delete.append(path)
 
         logger.info(
             "Identified %d non-%s files to delete",
             len(files_to_delete),
-            self.file_extension,
+            self.target_file_extension,
         )
 
         if len(files_to_delete) == 0:

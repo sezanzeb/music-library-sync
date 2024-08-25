@@ -9,5 +9,4 @@ setup(
     ),
     author="sezanzeb",
     packages=["music_library_sync"],
-    zip_safe=False,
 )
