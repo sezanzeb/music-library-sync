@@ -41,18 +41,21 @@ class MusicLibrarySync:
         assert target_file_extension in soundconverter_format_options
         self.target_file_extension = target_file_extension.lower()
 
+        os.makedirs(os.path.dirname(destination), exist_ok=True)
+
     def convert_missing(self) -> None:
         """Convert missing files from the source to the destination."""
         # save time by skipping existing files.
 
-        cpu_count = os.cpu_count() or 1
+        # let's keep the computer responsive by having one core on reserve
+        cpu_count = max(os.cpu_count() - 1, 1) if os.cpu_count() is not None else 1
 
         command = (
             f"soundconverter -b {self.source}/* "
             f"{self.soundconverter_format_options} "
             "--recursive "
             "--existing skip "
-            f"--jobs {max(cpu_count - 2, 1)} "
+            f"--jobs {cpu_count} "
             f"--output {self.destination}"
         )
 
