@@ -1,4 +1,4 @@
-<h1 align="center">💿📂<br/>Music Library Synchronization</h1>
+<h1 align="center">🎵 📂<br/>Music Library Synchronization</h1>
 <br/>
 
 Synchronize a directory with music of various formats (flac, mp3, etc.) with one
